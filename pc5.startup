@@ -1,2 +1,2 @@
 # Configuración para PC5 en la Red 2
-ifconfig eth1 192.168.2.2 netmask 255.255.255.0
+ifconfig eth0 192.168.2.2/24 netmask 255.255.255.0

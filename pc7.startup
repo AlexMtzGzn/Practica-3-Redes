@@ -1,2 +1,2 @@
 # Configuración para PC7 en la Red 2
-ifconfig eth1 192.168.2.4 netmask 255.255.255.0
+ifconfig eth0 192.168.2.4/24 netmask 255.255.255.0
