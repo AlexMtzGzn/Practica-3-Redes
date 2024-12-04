@@ -72,6 +72,17 @@ int main(int argc, char *argv[])
     strncpy(ifr.ifr_name, argv[1], IFNAMSIZ - 1);
     printf("Estoy en la red %s\n",ifr.ifr_name);
 
+    // Obtener nombre de host de origen
+    FILE *fp = popen("hostname", "r");
+    char nombre_pc_origen[256];
+    if (fp == NULL || fgets(nombre_pc_origen, sizeof(nombre_pc_origen), fp) == NULL)
+    {
+      perror("hostname retrieval failed");
+      exit(1);
+    }
+    nombre_pc_origen[strcspn(nombre_pc_origen, "\n")] = '\0';
+    pclose(fp);
+    printf("El host origen es: %s\n",nombre_pc_origen);
     /*Se imprime la MAC del host*/
     printf("Iterface de salida: %u, con MAC: %02x:%02x:%02x:%02x:%02x:%02x\n",
            (byte)(if_idx.ifr_ifindex),
