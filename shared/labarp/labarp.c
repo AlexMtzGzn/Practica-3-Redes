@@ -18,6 +18,26 @@ int main(int argc, char *argv[])
   /*La cabecera Ethernet (eh) y sendbuf apuntan a lo mismo*/
   struct ether_header *eh = (struct ether_header *)sendbuf;
   struct sockaddr_ll socket_address;
+
+  const char *mac_addresses_A[] = {
+      "36e665dff074",
+      "320ccaa6a341",
+      "16780436a3ae",
+      "028c89431cb4"
+
+  };
+
+  const char *mac_addresses_B[] = {
+      "2e9c4f3eb0cf",
+      "320ccaa6a341",
+      "16780436a3ae",
+      "028c89431cb4"
+
+  };
+  const char *mac_swich[] = {
+      "a6935fc3a470",
+      "320ccaa6a341"};
+
   if (argc != 3)
   {
     printf("Error en argumentos.\n\n");
@@ -92,10 +112,11 @@ int main(int argc, char *argv[])
     strncpy(ifr.ifr_name, argv[1], IFNAMSIZ - 1);
 
     // Obtener la dirección MAC de la interfaz
-    if (ioctl(sockfd, SIOCGIFHWADDR, &ifr) == -1) {
-        perror("Error al obtener la dirección MAC");
-        close(sockfd);
-        return 1;
+    if (ioctl(sockfd, SIOCGIFHWADDR, &ifr) == -1)
+    {
+      perror("Error al obtener la dirección MAC");
+      close(sockfd);
+      return 1;
     }
 
     // La dirección MAC está en ifr.ifr_hwaddr.sa_data
@@ -113,7 +134,7 @@ int main(int argc, char *argv[])
     {
       printf("Direccion MAC (XXXXXXXXXXXX): ");
       fgets(UserMAC, 100, stdin);
-      printf("Estoy imprimiendo la mac %s\n\n\n",UserMAC);
+      printf("Estoy imprimiendo la mac %s\n\n\n", UserMAC);
       iLen = strlen(UserMAC);
       for (i = 0; i < iLen; i++)
         if (UserMAC[i] == 10)
@@ -148,6 +169,7 @@ int main(int argc, char *argv[])
       eh->ether_dhost[3] = Mac[3];
       eh->ether_dhost[4] = Mac[4];
       eh->ether_dhost[5] = Mac[5];
+      
       /*Tipo de protocolo o la longitud del paquete*/
       eh->ether_type = htons(ETHER_TYPE);
 
