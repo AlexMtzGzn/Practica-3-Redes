@@ -70,9 +70,13 @@ int main(int argc, char *argv[])
            (byte)(if_mac.ifr_hwaddr.sa_data[0]), (byte)(if_mac.ifr_hwaddr.sa_data[1]),
            (byte)(if_mac.ifr_hwaddr.sa_data[2]), (byte)(if_mac.ifr_hwaddr.sa_data[3]),
            (byte)(if_mac.ifr_hwaddr.sa_data[4]), (byte)(if_mac.ifr_hwaddr.sa_data[5]));
+    
+    /*Recibimos en la variable el nombre de la pc destino*/
+    char *nombre_pc_destino[5];
+    nombre_pc_destino[0] = argv[2];
+    printf("Busco a %s\n", nombre_pc_destino[0]);
 
     Salir = 0;
-
     while (!Salir)
     {
       printf("Direccion MAC (XXXXXXXXXXXX): ");
@@ -141,7 +145,7 @@ int main(int argc, char *argv[])
       printf("Se ha enviado un paquete de %d bytes de payload.\n", iLenTotal);
     }
   }
-  
+
   else
   { /*Proceso hijo*/
     printf("Soy el proceso hijo y voy a responder mi MAC dado mi nombre.\n");
