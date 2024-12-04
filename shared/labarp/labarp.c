@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
   int sockfd;
-  struct ifreq if_idx, if_mac;
+  struct ifreq if_idx, if_mac,ifr;
   int i, iLen, iLenHeader, iLenTotal;
   byte sendbuf[BUF_SIZ], Mac[6];
   pid_t pid;
@@ -64,17 +64,20 @@ int main(int argc, char *argv[])
     if (ioctl(sockfd, SIOCGIFHWADDR, &if_mac) < 0)
       perror("SIOCGIFHWADDR");
 
+    /*Recibimos en la variable el nombre de la pc destino*/
+    char *nombre_pc_destino[5];
+    nombre_pc_destino[0] = argv[2];
+    printf("Busco a %s\n", nombre_pc_destino[0]);
+    //Encontramosm en que red estamos
+    strncpy(ifr.ifr_name, argv[1], IFNAMSIZ - 1);
+    printf("Estoy en la red %s\n",ifr.ifr_name);
+
     /*Se imprime la MAC del host*/
     printf("Iterface de salida: %u, con MAC: %02x:%02x:%02x:%02x:%02x:%02x\n",
            (byte)(if_idx.ifr_ifindex),
            (byte)(if_mac.ifr_hwaddr.sa_data[0]), (byte)(if_mac.ifr_hwaddr.sa_data[1]),
            (byte)(if_mac.ifr_hwaddr.sa_data[2]), (byte)(if_mac.ifr_hwaddr.sa_data[3]),
            (byte)(if_mac.ifr_hwaddr.sa_data[4]), (byte)(if_mac.ifr_hwaddr.sa_data[5]));
-    
-    /*Recibimos en la variable el nombre de la pc destino*/
-    char *nombre_pc_destino[5];
-    nombre_pc_destino[0] = argv[2];
-    printf("Busco a %s\n", nombre_pc_destino[0]);
 
     Salir = 0;
     while (!Salir)
