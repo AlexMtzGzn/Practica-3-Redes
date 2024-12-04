@@ -1,5 +1,2 @@
-#!/bin/bash
-# Configurar IP y puerta de enlace
-ip addr add 192.168.1.4/24 dev eth0
-ip link set dev eth0 up
-ip route add default via 192.168.1.254
+# Configuración para PC8 en la Red 2
+ifconfig eth1 192.168.2.5 netmask 255.255.255.0
