@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
   int sockfd;
-  struct ifreq if_idx, if_mac,ifr;
+  struct ifreq if_idx, if_mac, ifr;
   int i, iLen, iLenHeader, iLenTotal;
   byte sendbuf[BUF_SIZ], Mac[6];
   pid_t pid;
@@ -68,9 +68,9 @@ int main(int argc, char *argv[])
     char *nombre_pc_destino[5];
     nombre_pc_destino[0] = argv[2];
     printf("Busco a %s\n", nombre_pc_destino[0]);
-    //Encontramosm en que red estamos
+    // Encontramosm en que red estamos
     strncpy(ifr.ifr_name, argv[1], IFNAMSIZ - 1);
-    printf("Estoy en la red %s\n",ifr.ifr_name);
+    printf("Estoy en la red %s\n", ifr.ifr_name);
 
     // Obtener nombre de host de origen
     FILE *fp = popen("hostname", "r");
@@ -82,13 +82,34 @@ int main(int argc, char *argv[])
     }
     nombre_pc_origen[strcspn(nombre_pc_origen, "\n")] = '\0';
     pclose(fp);
-    printf("El host origen es: %s\n",nombre_pc_origen);
+    printf("El host origen es: %s\n", nombre_pc_origen);
     /*Se imprime la MAC del host*/
-    printf("Iterface de salida: %u, con MAC: %02x:%02x:%02x:%02x:%02x:%02x\n",
+
+    // Crear MAC de origen en formato string
+    unsigned char *mac;
+    char mac_origen_str[18];
+    // Copiar el nombre de la interfaz en la estructura ifr
+    strncpy(ifr.ifr_name, argv[1], IFNAMSIZ - 1);
+
+    // Obtener la dirección MAC de la interfaz
+    if (ioctl(sockfd, SIOCGIFHWADDR, &ifr) == -1) {
+        perror("Error al obtener la dirección MAC");
+        close(sockfd);
+        return 1;
+    }
+
+    // La dirección MAC está en ifr.ifr_hwaddr.sa_data
+    mac = (unsigned char *)ifr.ifr_hwaddr.sa_data;
+    // Convertir la dirección MAC a formato texto
+    snprintf(mac_origen_str, sizeof(mac_origen_str),
+             "%02x:%02x:%02x:%02x:%02x:%02x",
+             mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+
+    /*printf("Iterface de salida: %u, con MAC: %02x:%02x:%02x:%02x:%02x:%02x\n",
            (byte)(if_idx.ifr_ifindex),
            (byte)(if_mac.ifr_hwaddr.sa_data[0]), (byte)(if_mac.ifr_hwaddr.sa_data[1]),
            (byte)(if_mac.ifr_hwaddr.sa_data[2]), (byte)(if_mac.ifr_hwaddr.sa_data[3]),
-           (byte)(if_mac.ifr_hwaddr.sa_data[4]), (byte)(if_mac.ifr_hwaddr.sa_data[5]));
+           (byte)(if_mac.ifr_hwaddr.sa_data[4]), (byte)(if_mac.ifr_hwaddr.sa_data[5]));*/
 
     Salir = 0;
     while (!Salir)
