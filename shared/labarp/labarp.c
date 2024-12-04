@@ -105,17 +105,15 @@ int main(int argc, char *argv[])
              "%02x:%02x:%02x:%02x:%02x:%02x",
              mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
-    /*printf("Iterface de salida: %u, con MAC: %02x:%02x:%02x:%02x:%02x:%02x\n",
-           (byte)(if_idx.ifr_ifindex),
-           (byte)(if_mac.ifr_hwaddr.sa_data[0]), (byte)(if_mac.ifr_hwaddr.sa_data[1]),
-           (byte)(if_mac.ifr_hwaddr.sa_data[2]), (byte)(if_mac.ifr_hwaddr.sa_data[3]),
-           (byte)(if_mac.ifr_hwaddr.sa_data[4]), (byte)(if_mac.ifr_hwaddr.sa_data[5]));*/
+    printf("Iterface de salida: %u, con MAC: %s \n",
+           (byte)(if_idx.ifr_ifindex), mac_origen_str);
 
     Salir = 0;
     while (!Salir)
     {
       printf("Direccion MAC (XXXXXXXXXXXX): ");
       fgets(UserMAC, 100, stdin);
+      printf("Estoy imprimiendo la mac %s\n\n\n",UserMAC);
       iLen = strlen(UserMAC);
       for (i = 0; i < iLen; i++)
         if (UserMAC[i] == 10)
